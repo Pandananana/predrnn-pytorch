@@ -10,10 +10,10 @@ cd ..
     --model_name predrnn_v2 \
     --visual 0 \
     --reverse_input 1 \
-    --img_width 128 \
+    --img_width 256 \
     --img_channel 1 \
-    --input_length 5 \
-    --total_length 8 \
+    --input_length 3 \
+    --total_length 5 \
     --num_hidden 128,128,128,128 \
     --filter_size 5 \
     --stride 1 \
@@ -25,7 +25,7 @@ cd ..
     --r_sampling_step_2 5000 \
     --r_exp_alpha 1000 \
     --lr 0.0001 \
-    --batch_size 2 \
+    --batch_size 6 \
     --max_iterations 10000 \
     --display_interval 50 \
     --test_interval 1000 \
