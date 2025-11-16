@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "run.py", line 223, in <module>
+    train_wrapper(model)
+  File "run.py", line 174, in train_wrapper
+    train_input_handle, test_input_handle = datasets_factory.data_provider(
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/datasets_factory.py", line 43, in data_provider
+    train_input_handle = input_handle.get_train_input_handle()
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/kth_action.py", line 210, in get_train_input_handle
+    train_data, train_indices = self.load_data(self.paths, mode='train')
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/kth_action.py", line 187, in load_data
+    end = int(frames_file_name[seq_end_idx][6:10])
+ValueError: invalid literal for int() with base 10: '380.'

@@ -184,8 +184,12 @@ class DataProcess:
             seq_start_idx = seq_end_idx - self.seq_len + 1
             if frames_person_mark[seq_end_idx] == frames_person_mark[seq_start_idx]:
                 # Get person ID at the start and end of this sequence (of seq_len)
-                end = int(frames_file_name[seq_end_idx][6:10])
-                start = int(frames_file_name[seq_start_idx][6:10])
+                # Extract frame number robustly (handles both 3 and 4 digit frame numbers)
+                end_filename = frames_file_name[seq_end_idx]
+                start_filename = frames_file_name[seq_start_idx]
+                # Remove 'image' prefix and '.png' suffix, then convert to int
+                end = int(end_filename[5:].split('.')[0])
+                start = int(start_filename[5:].split('.')[0])
                 
                 # TODO: mode == 'test'
                 if end - start == self.seq_len - 1:

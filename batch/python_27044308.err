@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "run.py", line 223, in <module>
+    train_wrapper(model)
+  File "run.py", line 174, in train_wrapper
+    train_input_handle, test_input_handle = datasets_factory.data_provider(
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/datasets_factory.py", line 43, in data_provider
+    train_input_handle = input_handle.get_train_input_handle()
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/kth_action.py", line 210, in get_train_input_handle
+    train_data, train_indices = self.load_data(self.paths, mode='train')
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/kth_action.py", line 160, in load_data
+    tot_num_frames = sum((1 for _ in self.generate_frames(path, mode_person_ids)))
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/kth_action.py", line 160, in <genexpr>
+    tot_num_frames = sum((1 for _ in self.generate_frames(path, mode_person_ids)))
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/data_provider/kth_action.py", line 117, in generate_frames
+    cat_videos = os.listdir(cat_dir_path)
+FileNotFoundError: [Errno 2] No such file or directory: 'data/kth_action/boxing'
