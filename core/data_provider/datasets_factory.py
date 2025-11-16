@@ -7,6 +7,8 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
         from core.data_provider import kth_action as dataset_module
     elif dataset_name == 'bair':
         from core.data_provider import bair as dataset_module
+    elif dataset_name == 'temperature':
+        from core.data_provider import temperature as dataset_module
     else:
         raise ValueError('Name of dataset unknown %s' % dataset_name)
     train_data_list = train_data_paths.split(',')
@@ -78,4 +80,23 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
             train_input_handle.begin(do_shuffle=True)
             return train_input_handle, test_input_handle
         else:
+            return test_input_handle
+
+    if dataset_name == 'temperature':
+        input_param = {'paths': valid_data_list,
+                       'image_width': img_width,
+                       'minibatch_size': batch_size,
+                       'seq_length': seq_length,
+                       'input_data_type': 'float32',
+                       'name': dataset_name + ' iterator'}
+        input_handle = dataset_module.DataProcess(input_param)
+        if is_training:
+            train_input_handle = input_handle.get_train_input_handle()
+            train_input_handle.begin(do_shuffle=True)
+            test_input_handle = input_handle.get_test_input_handle()
+            test_input_handle.begin(do_shuffle=False)
+            return train_input_handle, test_input_handle
+        else:
+            test_input_handle = input_handle.get_test_input_handle()
+            test_input_handle.begin(do_shuffle=False)
             return test_input_handle
