@@ -1,15 +1,13 @@
-from core.data_provider import kth_action, mnist, bair
-
-datasets_map = {
-    'mnist': mnist,
-    'action': kth_action,
-    'bair': bair,
-}
-
-
 def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
                   img_width, seq_length, injection_action, is_training=True):
-    if dataset_name not in datasets_map:
+    # Lazy import to avoid loading TensorFlow unless needed
+    if dataset_name == 'mnist':
+        from core.data_provider import mnist as dataset_module
+    elif dataset_name == 'action':
+        from core.data_provider import kth_action as dataset_module
+    elif dataset_name == 'bair':
+        from core.data_provider import bair as dataset_module
+    else:
         raise ValueError('Name of dataset unknown %s' % dataset_name)
     train_data_list = train_data_paths.split(',')
     valid_data_list = valid_data_paths.split(',')
@@ -19,7 +17,7 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
                             'input_data_type': 'float32',
                             'is_output_sequence': True,
                             'name': dataset_name + 'test iterator'}
-        test_input_handle = datasets_map[dataset_name].InputHandle(test_input_param)
+        test_input_handle = dataset_module.InputHandle(test_input_param)
         test_input_handle.begin(do_shuffle=False)
         if is_training:
             train_input_param = {'paths': train_data_list,
@@ -27,7 +25,7 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
                                  'input_data_type': 'float32',
                                  'is_output_sequence': True,
                                  'name': dataset_name + ' train iterator'}
-            train_input_handle = datasets_map[dataset_name].InputHandle(train_input_param)
+            train_input_handle = dataset_module.InputHandle(train_input_param)
             train_input_handle.begin(do_shuffle=True)
             return train_input_handle, test_input_handle
         else:
@@ -40,7 +38,7 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
                        'seq_length': seq_length,
                        'input_data_type': 'float32',
                        'name': dataset_name + ' iterator'}
-        input_handle = datasets_map[dataset_name].DataProcess(input_param)
+        input_handle = dataset_module.DataProcess(input_param)
         if is_training:
             train_input_handle = input_handle.get_train_input_handle()
             train_input_handle.begin(do_shuffle=True)
@@ -62,7 +60,7 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
                             'injection_action': injection_action,
                             'input_data_type': 'float32',
                             'name': dataset_name + 'test iterator'}
-        input_handle_test = datasets_map[dataset_name].DataProcess(test_input_param)
+        input_handle_test = dataset_module.DataProcess(test_input_param)
         test_input_handle = input_handle_test.get_test_input_handle()
         test_input_handle.begin(do_shuffle=False)
         if is_training:
@@ -75,7 +73,7 @@ def data_provider(dataset_name, train_data_paths, valid_data_paths, batch_size,
                                  'injection_action': injection_action,
                                  'input_data_type': 'float32',
                                  'name': dataset_name + ' train iterator'}
-            input_handle_train = datasets_map[dataset_name].DataProcess(train_input_param)
+            input_handle_train = dataset_module.DataProcess(train_input_param)
             train_input_handle = input_handle_train.get_train_input_handle()
             train_input_handle.begin(do_shuffle=True)
             return train_input_handle, test_input_handle
