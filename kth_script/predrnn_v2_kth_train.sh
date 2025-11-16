@@ -1,11 +1,10 @@
-export CUDA_VISIBLE_DEVICES=4
 cd ..
-python -u run.py \
+.venv/bin/python -u run.py \
     --is_training 1 \
     --device cuda \
     --dataset_name action \
-    --train_data_paths /workspace/wuhaixu/predrnn/data/kth_action \
-    --valid_data_paths /workspace/wuhaixu/predrnn/data/kth_action \
+    --train_data_paths data/kth_action \
+    --valid_data_paths data/kth_action \
     --save_dir checkpoints/kth_predrnn_v2 \
     --gen_frm_dir results/kth_predrnn_v2 \
     --model_name predrnn_v2 \
