@@ -110,7 +110,24 @@ class DataProcess:
         first_img = Image.open(first_img_path)
         orig_width, orig_height = first_img.size
         print(f"Original image size: {orig_width}x{orig_height}")
-        print(f"Resizing to: {self.image_width}x{self.image_width}")
+        
+        # Calculate resize dimensions preserving aspect ratio
+        aspect_ratio = orig_width / orig_height
+        if aspect_ratio > 1:  # Width > Height
+            new_width = self.image_width
+            new_height = int(self.image_width / aspect_ratio)
+        else:  # Height >= Width
+            new_height = self.image_width
+            new_width = int(self.image_width * aspect_ratio)
+        
+        # Calculate padding needed to make square
+        pad_top = (self.image_width - new_height) // 2
+        pad_bottom = self.image_width - new_height - pad_top
+        pad_left = (self.image_width - new_width) // 2
+        pad_right = self.image_width - new_width - pad_left
+        
+        print(f"Resizing to: {new_width}x{new_height} with padding to {self.image_width}x{self.image_width}")
+        print(f"Padding: top={pad_top}, bottom={pad_bottom}, left={pad_left}, right={pad_right}")
 
         # Allocate array for all frames
         data = np.empty((num_frames, self.image_width, self.image_width, 1), dtype=np.float32)
@@ -130,10 +147,14 @@ class DataProcess:
             else:
                 img_normalized = img_np
             
-            # Resize to target dimensions
-            img_resized = cv2.resize(img_normalized, (self.image_width, self.image_width), 
+            # Resize maintaining aspect ratio
+            img_resized = cv2.resize(img_normalized, (new_width, new_height), 
                                     interpolation=cv2.INTER_AREA)
-            data[i, :, :, 0] = img_resized
+            
+            # Create padded image (padding with 0, which is black after normalization)
+            img_padded = np.zeros((self.image_width, self.image_width), dtype=np.float32)
+            img_padded[pad_top:pad_top+new_height, pad_left:pad_left+new_width] = img_resized
+            data[i, :, :, 0] = img_padded
             
             if i == 0:
                 print(f"Temperature value range - Original: [{img_min:.2f}, {img_max:.2f}], "
