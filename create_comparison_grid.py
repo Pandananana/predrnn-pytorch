@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Script to create a comparison grid of ground truth and predicted images.
-Top row: Ground truth 1-8
-Bottom row: Ground truth 1-5, Predicted 6-8
+Dynamically detects the number of GT images and creates a 2-row grid:
+- Top row: All ground truth images
+- Bottom row: Ground truth where no prediction exists, predictions where available
 """
 
 import os
@@ -12,59 +13,89 @@ import argparse
 
 def create_comparison_grid(input_dir, output_path):
     """
-    Create a 2x8 grid comparing ground truth and predictions.
+    Create a 2-row grid comparing ground truth and predictions.
+    Dynamically determines the number of columns based on available GT images.
     
     Args:
-        input_dir: Directory containing gt*.png and pd*.png files
+        input_dir: Directory containing GT*.png and PD*.png files
         output_path: Path where the output image will be saved
     """
     # Load images
     print(f"Loading images from {input_dir}...")
     
-    # Top row: gt1-gt8
+    # Find all GT images to determine the number of columns
+    gt_files = {}
+    pd_files = {}
+    
+    for filename in os.listdir(input_dir):
+        if filename.upper().startswith('GT') and filename.lower().endswith('.png'):
+            # Extract the number from the filename (e.g., GT1.png -> 1)
+            try:
+                num_str = filename[2:-4]  # Remove 'GT' prefix and '.png' suffix
+                num = int(num_str)
+                gt_files[num] = os.path.join(input_dir, filename)
+            except ValueError:
+                continue
+        elif filename.upper().startswith('PD') and filename.lower().endswith('.png'):
+            # Extract the number from the filename (e.g., PD6.png -> 6)
+            try:
+                num_str = filename[2:-4]  # Remove 'PD' prefix and '.png' suffix
+                num = int(num_str)
+                pd_files[num] = os.path.join(input_dir, filename)
+            except ValueError:
+                continue
+    
+    if not gt_files:
+        raise FileNotFoundError(f"No ground truth images found in {input_dir}")
+    
+    # Determine the range of indices
+    indices = sorted(gt_files.keys())
+    num_cols = len(indices)
+    
+    print(f"Found {num_cols} ground truth images: {indices}")
+    print(f"Found {len(pd_files)} prediction images: {sorted(pd_files.keys())}")
+    
+    # Top row: All GT images
     top_row = []
-    for i in range(1, 9):
-        img_path = os.path.join(input_dir, f"gt{i}.png")
-        if not os.path.exists(img_path):
-            raise FileNotFoundError(f"Missing ground truth image: {img_path}")
-        top_row.append(Image.open(img_path))
+    for idx in indices:
+        img = Image.open(gt_files[idx])
+        top_row.append(img)
     
-    # Bottom row: gt1-gt5, pd6-pd8
+    # Bottom row: GT for indices without predictions, PD where predictions exist
     bottom_row = []
-    for i in range(1, 6):
-        img_path = os.path.join(input_dir, f"gt{i}.png")
-        bottom_row.append(Image.open(img_path))
+    bottom_row_labels = []
+    for idx in indices:
+        if idx in pd_files:
+            img = Image.open(pd_files[idx])
+            bottom_row.append(img)
+            bottom_row_labels.append(f"PD{idx}")
+        else:
+            img = Image.open(gt_files[idx])
+            bottom_row.append(img)
+            bottom_row_labels.append(f"GT{idx}")
     
-    for i in range(6, 9):
-        img_path = os.path.join(input_dir, f"pd{i}.png")
-        if not os.path.exists(img_path):
-            raise FileNotFoundError(f"Missing prediction image: {img_path}")
-        bottom_row.append(Image.open(img_path))
+    print(f"Bottom row composition: {', '.join(bottom_row_labels)}")
     
     # Get dimensions (assuming all images are the same size)
     img_width, img_height = top_row[0].size
     print(f"Individual image size: {img_width}x{img_height}")
     
-    # Create the grid (2 rows x 8 columns)
-    grid_width = img_width * 8
-    grid_height = img_height * 2
-    
     # Add spacing between images and rows for better visualization
     spacing = 5
-    grid_width_with_spacing = img_width * 8 + spacing * 7
+    grid_width_with_spacing = img_width * num_cols + spacing * (num_cols - 1)
     grid_height_with_spacing = img_height * 2 + spacing
     
     # Create white canvas
     grid_image = Image.new('RGB', (grid_width_with_spacing, grid_height_with_spacing), 'white')
     
-    # Paste top row (ground truth 1-8)
-    print("Creating top row (Ground Truth 1-8)...")
+    # Paste top row (all ground truth)
+    print(f"Creating top row (Ground Truth for all {num_cols} frames)...")
     for i, img in enumerate(top_row):
         x_offset = i * (img_width + spacing)
         grid_image.paste(img, (x_offset, 0))
     
-    # Paste bottom row (gt 1-5, pd 6-8)
-    print("Creating bottom row (GT 1-5, Pred 6-8)...")
+    # Paste bottom row (GT where no prediction, PD where prediction exists)
+    print("Creating bottom row (GT for input frames, PD for predicted frames)...")
     for i, img in enumerate(bottom_row):
         x_offset = i * (img_width + spacing)
         y_offset = img_height + spacing
