@@ -6,8 +6,8 @@
 #BSUB -R "rusage[mem=30GB]"
 #BSUB -q gpuv100  # or gpua100
 #BSUB -cwd /zhome/66/2/168935/uni/deeplearning/predrnn-pytorch
-#BSUB -o batch/python_%J.out
-#BSUB -e batch/python_%J.err
+#BSUB -o batch/kth/python_%J.out
+#BSUB -e batch/kth/python_%J.err
 
 # Initialize Python environment
 cd kth_script

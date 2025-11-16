@@ -3,3 +3,5 @@ data
 checkpoints
 results
 __pycache__
+*.out
+*.err
