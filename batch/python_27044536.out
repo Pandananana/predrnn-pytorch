@@ -1,0 +1,110 @@
+Setting up [LPIPS] perceptual loss: trunk [alex], v[0.1], spatial [off]
+Loading model from: /zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/.venv/lib/python3.8/site-packages/lpips/weights/v0.1/alex.pth
+Namespace(batch_size=4, conv_on_input=0, dataset_name='action', decouple_beta=0.01, device='cuda', display_interval=100, filter_size=5, gen_frm_dir='results/kth_predrnn_v2', img_channel=1, img_width=128, injection_action='concat', input_length=10, is_training=0, layer_norm=0, lr=0.0001, max_iterations=80000, max_test_batches=5, model_name='predrnn_v2', n_gpu=1, num_action_ch=4, num_hidden='128,128,128,128', num_save_samples=2, patch_size=4, pretrained_model='./checkpoints/pretrained/kth_model.ckpt', r_exp_alpha=2000, r_sampling_step_1=5000.0, r_sampling_step_2=50000, res_on_conv=0, reverse_input=1, reverse_scheduled_sampling=1, sampling_changing_rate=2e-05, sampling_start_value=1.0, sampling_stop_iter=50000, save_dir='checkpoints/kth_predrnn_v2', scheduled_sampling=1, snapshot_interval=5000, stride=1, test_interval=5000, total_length=20, train_data_paths='data/kth_action', valid_data_paths='data/kth_action', visual=0, visual_path='./decoupling_visual')
+Initializing models
+load model: ./checkpoints/pretrained/kth_model.ckpt
+begin load datadata/kth_action
+Preparing to load 105855 video frames.
+there are 105855 pictures
+there are 13058 sequences
+2025-11-16 14:15:45 test...
+mse per seq: 136.0359866221746
+3.5009730060895285
+6.323984841505687
+9.140441457430521
+12.192163546880087
+13.675111929575602
+15.275503714879354
+17.201791206995647
+18.176126718521118
+19.29361041386922
+21.256279786427815
+ssim per frame: 0.73504996
+0.8036838
+0.78343064
+0.7643644
+0.7480919
+0.73542523
+0.72235394
+0.7109585
+0.7022018
+0.69354296
+0.68644613
+psnr per frame: 27.111414
+32.337173
+30.329443
+28.715837
+27.371315
+26.670082
+26.051634
+25.403612
+25.095644
+24.779472
+24.35993
+lpips per frame: 0.09508764
+0.02097853
+0.040169436
+0.058894902
+0.07639973
+0.0934684
+0.10751019
+0.12135244
+0.1331571
+0.14410318
+0.15484256
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 27044536: <predrnn_kth_train> in cluster <dcc> Done
+
+Job <predrnn_kth_train> was submitted from host <n-62-27-23> by user <s215489> in cluster <dcc> at Sun Nov 16 14:11:50 2025
+Job was executed on host(s) <4*n-62-20-16>, in queue <gpuv100>, as user <s215489> in cluster <dcc> at Sun Nov 16 14:12:57 2025
+</zhome/66/2/168935> was used as the home directory.
+</zhome/66/2/168935/uni/deeplearning/predrnn-pytorch> was used as the working directory.
+Started at Sun Nov 16 14:12:57 2025
+Terminated at Sun Nov 16 14:15:51 2025
+Results reported at Sun Nov 16 14:15:51 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -J predrnn_kth_train
+#BSUB -W 60
+#BSUB -n 4
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=30GB]"
+#BSUB -q gpuv100  # or gpua100
+#BSUB -cwd /zhome/66/2/168935/uni/deeplearning/predrnn-pytorch
+#BSUB -o batch/python_%J.out
+#BSUB -e batch/python_%J.err
+
+# Initialize Python environment
+cd kth_script
+bash predrnn_v2_kth_test.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   77.73 sec.
+    Max Memory :                                 8000 MB
+    Average Memory :                             6270.75 MB
+    Total Requested Memory :                     122880.00 MB
+    Delta Memory :                               114880.00 MB
+    Max Swap :                                   -
+    Max Processes :                              5
+    Max Threads :                                8
+    Run time :                                   174 sec.
+    Turnaround time :                            241 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <batch/python_27044536.err> for stderr output of this job.
+

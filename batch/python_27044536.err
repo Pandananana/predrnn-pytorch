@@ -1,0 +1,4 @@
+/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/.venv/lib/python3.8/site-packages/torch/nn/functional.py:718: UserWarning: Named tensors and all their associated APIs are an experimental feature and subject to change. Please do not use them for anything important until they are released as stable. (Triggered internally at  /pytorch/c10/core/TensorImpl.h:1156.)
+  return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/trainer.py:109: FutureWarning: `multichannel` is a deprecated argument name for `structural_similarity`. It will be removed in version 1.0. Please use `channel_axis` instead.
+  score, _ = compare_ssim(pred_frm[b], real_frm[b], full=True, multichannel=True)

@@ -188,8 +188,9 @@ class DataProcess:
                 end_filename = frames_file_name[seq_end_idx]
                 start_filename = frames_file_name[seq_start_idx]
                 # Remove 'image' prefix and '.png' suffix, then convert to int
-                end = int(end_filename[5:].split('.')[0])
-                start = int(start_filename[5:].split('.')[0])
+                # Handle both 'image001.png' and 'image-001.png' formats
+                end = int(end_filename[5:].split('.')[0].replace('-', ''))
+                start = int(start_filename[5:].split('.')[0].replace('-', ''))
                 
                 # TODO: mode == 'test'
                 if end - start == self.seq_len - 1:

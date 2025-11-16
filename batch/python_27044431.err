@@ -1,0 +1,9 @@
+There is no batch left in action iterator. Consider to user iterators.begin() to rescan from the beginning of the iterators
+Traceback (most recent call last):
+  File "run.py", line 223, in <module>
+    train_wrapper(model)
+  File "run.py", line 184, in train_wrapper
+    ims = preprocess.reshape_patch(ims, args.patch_size)
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/utils/preprocess.py", line 6, in reshape_patch
+    assert 5 == img_tensor.ndim
+AttributeError: 'NoneType' object has no attribute 'ndim'

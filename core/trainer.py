@@ -54,8 +54,11 @@ def test(model, test_input_handle, configs, itr):
     if configs.reverse_scheduled_sampling == 1:
         real_input_flag[:, :configs.input_length - 1, :, :] = 1.0
 
+    max_test_batches = getattr(configs, 'max_test_batches', None)
     while (test_input_handle.no_batch_left() == False):
         batch_id = batch_id + 1
+        if max_test_batches and batch_id > max_test_batches:
+            break
         test_ims = test_input_handle.get_batch()
         test_dat = preprocess.reshape_patch(test_ims, configs.patch_size)
         test_ims = test_ims[:, :, :, :, :configs.img_channel]

@@ -58,6 +58,7 @@ parser.add_argument('--display_interval', type=int, default=100)
 parser.add_argument('--test_interval', type=int, default=5000)
 parser.add_argument('--snapshot_interval', type=int, default=5000)
 parser.add_argument('--num_save_samples', type=int, default=10)
+parser.add_argument('--max_test_batches', type=int, default=None, help='Limit test to N batches (for quick testing)')
 parser.add_argument('--n_gpu', type=int, default=1)
 
 # visualization of memory decoupling

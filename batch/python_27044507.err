@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "run.py", line 225, in <module>
+    test_wrapper(model)
+  File "run.py", line 207, in test_wrapper
+    trainer.test(model, test_input_handle, args, 'test_result')
+  File "/zhome/66/2/168935/uni/deeplearning/predrnn-pytorch/core/trainer.py", line 128, in test
+    avg_mse = avg_mse / (batch_id * configs.batch_size)
+ZeroDivisionError: division by zero
